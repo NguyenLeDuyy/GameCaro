@@ -90,7 +90,7 @@
             label1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.Font = new Font("Algerian", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.Location = new Point(18, 451);
+            label1.Location = new Point(17, 463);
             label1.Name = "label1";
             label1.Size = new Size(272, 34);
             label1.TabIndex = 5;
@@ -102,16 +102,16 @@
             pctbSign.BackColor = SystemColors.Control;
             pctbSign.BackgroundImage = Properties.Resources._21;
             pctbSign.BackgroundImageLayout = ImageLayout.Stretch;
-            pctbSign.Location = new Point(5, 202);
+            pctbSign.Location = new Point(7, 174);
             pctbSign.Name = "pctbSign";
-            pctbSign.Size = new Size(300, 220);
+            pctbSign.Size = new Size(300, 262);
             pctbSign.TabIndex = 4;
             pctbSign.TabStop = false;
             // 
             // btnLAN
             // 
             btnLAN.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            btnLAN.Location = new Point(3, 155);
+            btnLAN.Location = new Point(5, 139);
             btnLAN.Name = "btnLAN";
             btnLAN.Size = new Size(304, 29);
             btnLAN.TabIndex = 3;
@@ -121,7 +121,7 @@
             // txbIP
             // 
             txbIP.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txbIP.Location = new Point(5, 107);
+            txbIP.Location = new Point(7, 91);
             txbIP.Name = "txbIP";
             txbIP.Size = new Size(302, 27);
             txbIP.TabIndex = 2;
@@ -129,7 +129,7 @@
             // prcbCoolDown
             // 
             prcbCoolDown.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            prcbCoolDown.Location = new Point(5, 61);
+            prcbCoolDown.Location = new Point(7, 45);
             prcbCoolDown.Name = "prcbCoolDown";
             prcbCoolDown.Size = new Size(300, 29);
             prcbCoolDown.TabIndex = 1;
@@ -137,7 +137,7 @@
             // txbPlayerName
             // 
             txbPlayerName.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            txbPlayerName.Location = new Point(3, 17);
+            txbPlayerName.Location = new Point(5, 1);
             txbPlayerName.Name = "txbPlayerName";
             txbPlayerName.ReadOnly = true;
             txbPlayerName.Size = new Size(302, 27);
