@@ -9,7 +9,7 @@
         {
             InitializeComponent();
 
-            ChessBoard = new ChessBoardManager(pnlChessBoard);
+            ChessBoard = new ChessBoardManager(pnlChessBoard, txbPlayerName, pctbSign);
             ChessBoard.DrawChessBoard();
         }
         

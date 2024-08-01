@@ -100,11 +100,11 @@
             // 
             pctbSign.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             pctbSign.BackColor = SystemColors.Control;
-            pctbSign.BackgroundImage = Properties.Resources._21;
             pctbSign.BackgroundImageLayout = ImageLayout.Stretch;
             pctbSign.Location = new Point(7, 174);
             pctbSign.Name = "pctbSign";
             pctbSign.Size = new Size(300, 262);
+            pctbSign.SizeMode = PictureBoxSizeMode.StretchImage;
             pctbSign.TabIndex = 4;
             pctbSign.TabStop = false;
             // 
