@@ -31,9 +31,34 @@ namespace GameCaro
         public PictureBox PlayerSign { get => playerSign; set => playerSign = value; }
 
         private List<List<Button>> Matrix;
+
+        private event EventHandler playerMared;
+        public event EventHandler PlayerMared
+        {
+            add
+            {
+                playerMared += value;
+            }
+            remove
+            {
+                playerMared -= value;
+            }
+        }
+        private event EventHandler endedGame;
+        public event EventHandler EndedGame
+        {
+            add
+            {
+                endedGame += value;
+            }
+            remove
+            {
+                endedGame -= value;
+            }
+        }
         #endregion
 
-        #region Initialize
+            #region Initialize
         public ChessBoardManager(Panel chessBoard, TextBox playerName, PictureBox sign) // Constructor
         {
             this.ChessBoard = chessBoard; // con trỏ this trỏ tới thuộc tính ChessBoard => copy dữ liệu của chessBoard
@@ -52,6 +77,7 @@ namespace GameCaro
         #region Methods
         public void DrawChessBoard()
         {
+            chessBoard.Enabled = true;
             Matrix = new List<List<Button>>();
 
             Button oldButton = new Button() { Width = 0, Location = new Point(0, 0) };
@@ -91,14 +117,19 @@ namespace GameCaro
             Sign(btn);
             SwitchPlayer();
 
+            if (playerMared != null)
+            {
+                playerMared(this, new EventArgs());
+            }
             if (isEndGame(btn))
             {
                 EndGame();
-
             }
+            
         }
-        private void EndGame() {
-            MessageBox.Show("Kết thúc game!");
+        public void EndGame() {
+            if (endedGame !=null) 
+                endedGame(this,new EventArgs());
         }
 
         private bool isEndGame(Button btn)
