@@ -31,6 +31,31 @@ namespace GameCaro
         private List<List<Button>> matrix; 
         public List<List<Button>> Matrix { get => matrix; set => matrix = value; }
 
+        private event EventHandler playerSigned;
+        public event EventHandler PlayerMarked
+        {
+            add
+            {
+                playerSigned += value;
+            }
+            remove
+            {
+                playerSigned -= value;
+            }
+        }
+
+        private event EventHandler endedGame;
+        public event EventHandler EndedGame
+        {
+            add
+            {
+                endedGame += value;
+            }
+            remove
+            {
+                endedGame -= value;
+            }
+        }
         #endregion
 
         #region Initialize
@@ -52,6 +77,7 @@ namespace GameCaro
         #region Methods
         public void DrawChessBoard()
         {
+            ChessBoard.Enabled = true;
             Matrix = new List<List<Button>>();
             Button oldButton = new Button() { Width = 0, Location = new Point(0, 0) };
             for (int i = 0; i < Cons.CHESS_BOARD_HEIGHT; i++)
@@ -94,15 +120,21 @@ namespace GameCaro
 
             SwitchPlayer();
 
+            if (playerSigned != null)
+                playerSigned(this, new EventArgs());
+
             if (isEndGame(btn))
             {
                 EndGame();
             }
+
+
         }
 
-        private void EndGame()
+        public void EndGame()
         {
-            MessageBox.Show("Trò chơi kết thúc!");
+            if (endedGame != null)
+                endedGame(this, new EventArgs());
         }
 
         private bool isEndGame(Button btn)
