@@ -32,7 +32,7 @@ namespace GameCaro
         public List<List<Button>> Matrix { get => matrix; set => matrix = value; }
 
         private event EventHandler playerSigned;
-        public event EventHandler PlayerMarked
+        public event EventHandler PlayerSigned
         {
             add
             {
@@ -69,8 +69,6 @@ namespace GameCaro
                 new Player("Nhom1_LTM", Image.FromFile(Application.StartupPath + "\\Resources\\21.png")),
                 new Player("Bui_Duong_The", Image.FromFile(Application.StartupPath + "\\Resources\\1.png")),
             };
-            currentplayer = 0;
-            SwitchPlayer();
         }
         #endregion
 
@@ -78,6 +76,10 @@ namespace GameCaro
         public void DrawChessBoard()
         {
             ChessBoard.Enabled = true;
+            ChessBoard.Controls.Clear();
+            currentplayer = 0;
+            SwitchPlayer();
+
             Matrix = new List<List<Button>>();
             Button oldButton = new Button() { Width = 0, Location = new Point(0, 0) };
             for (int i = 0; i < Cons.CHESS_BOARD_HEIGHT; i++)
