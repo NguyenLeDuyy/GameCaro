@@ -82,14 +82,8 @@
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            tmCoolDown.Stop();
             if (MessageBox.Show("Bạn có chắc muốn thoát?", "Thông báo", MessageBoxButtons.OKCancel) != System.Windows.Forms.DialogResult.OK)
-            {
                 e.Cancel = true;
-                tmCoolDown.Start();
-            }
-
-
         }
         #endregion
     }
