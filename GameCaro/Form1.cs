@@ -11,7 +11,7 @@
 
             ChessBoard = new ChessBoardManager(pnlChessBoard, txbPlayerName, pctbSign);
             ChessBoard.EndedGame += ChessBoard_EndedGame;
-            ChessBoard.PlayerMarked += ChessBoard_PlayerMarked;
+            ChessBoard.PlayerSigned += ChessBoard_PlayerSigned;
 
             prcbCoolDown.Step = Cons.COOL_DOWN_STEP;
             prcbCoolDown.Maximum = Cons.COOL_DOWN_TIME;
@@ -19,19 +19,32 @@
 
             tmCoolDown.Interval = Cons.COOL_DOWN_INTERVAL;
 
-            ChessBoard.DrawChessBoard();
-
-            tmCoolDown.Start();
+            NewGame();
         }
 
+        #region Methods
         void EndGame()
         {
             tmCoolDown.Stop();
             pnlChessBoard.Enabled = false;
             MessageBox.Show("Trò chơi kết thúc!");
         }
+        void NewGame()
+        {
+            prcbCoolDown.Value = 0;
+            tmCoolDown.Stop();
 
-        private void ChessBoard_PlayerMarked(object? sender, EventArgs e)
+            ChessBoard.DrawChessBoard();
+        }
+        void Quit()
+        {
+            Application.Exit();
+        }
+        void Undo()
+        {
+
+        }
+        private void ChessBoard_PlayerSigned(object? sender, EventArgs e)
         {
             tmCoolDown.Start();
             prcbCoolDown.Value = 0;
@@ -51,5 +64,27 @@
                 EndGame();
             }
         }
+
+        private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NewGame();
+        }
+
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Undo();
+        }
+
+        private void quitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Quit();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("Bạn có chắc muốn thoát?", "Thông báo", MessageBoxButtons.OKCancel) != System.Windows.Forms.DialogResult.OK)
+                e.Cancel = true;
+        }
+        #endregion
     }
 }

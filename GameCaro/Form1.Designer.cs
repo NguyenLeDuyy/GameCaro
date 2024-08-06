@@ -31,7 +31,6 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             pnlChessBoard = new Panel();
-            panel2 = new Panel();
             main_picture = new PictureBox();
             panel3 = new Panel();
             label1 = new Label();
@@ -41,33 +40,32 @@
             prcbCoolDown = new ProgressBar();
             txbPlayerName = new TextBox();
             tmCoolDown = new System.Windows.Forms.Timer(components);
-            panel2.SuspendLayout();
+            panel2 = new Panel();
+            menuStrip1 = new MenuStrip();
+            menuToolStripMenuItem = new ToolStripMenuItem();
+            newGameToolStripMenuItem = new ToolStripMenuItem();
+            undoToolStripMenuItem = new ToolStripMenuItem();
+            quitToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)main_picture).BeginInit();
             panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pctbSign).BeginInit();
+            panel2.SuspendLayout();
+            menuStrip1.SuspendLayout();
             SuspendLayout();
             // 
             // pnlChessBoard
             // 
             pnlChessBoard.BackColor = SystemColors.Control;
-            pnlChessBoard.Location = new Point(9, 183);
+            pnlChessBoard.Location = new Point(9, 219);
             pnlChessBoard.Name = "pnlChessBoard";
             pnlChessBoard.Size = new Size(813, 521);
             pnlChessBoard.TabIndex = 0;
-            // 
-            // panel2
-            // 
-            panel2.Controls.Add(main_picture);
-            panel2.Location = new Point(12, 8);
-            panel2.Name = "panel2";
-            panel2.Size = new Size(1126, 159);
-            panel2.TabIndex = 1;
             // 
             // main_picture
             // 
             main_picture.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             main_picture.BackgroundImage = Properties.Resources.Caro_Chess_5_in_a_line;
-            main_picture.Location = new Point(-3, 0);
+            main_picture.Location = new Point(3, 3);
             main_picture.Name = "main_picture";
             main_picture.Size = new Size(1129, 156);
             main_picture.TabIndex = 0;
@@ -82,7 +80,7 @@
             panel3.Controls.Add(txbIP);
             panel3.Controls.Add(prcbCoolDown);
             panel3.Controls.Add(txbPlayerName);
-            panel3.Location = new Point(828, 183);
+            panel3.Location = new Point(828, 219);
             panel3.Name = "panel3";
             panel3.Size = new Size(310, 521);
             panel3.TabIndex = 2;
@@ -149,29 +147,83 @@
             // 
             tmCoolDown.Tick += tmCoolDown_Tick;
             // 
+            // panel2
+            // 
+            panel2.Controls.Add(main_picture);
+            panel2.Location = new Point(9, 43);
+            panel2.Name = "panel2";
+            panel2.Size = new Size(1126, 159);
+            panel2.TabIndex = 1;
+            // 
+            // menuStrip1
+            // 
+            menuStrip1.ImageScalingSize = new Size(20, 20);
+            menuStrip1.Items.AddRange(new ToolStripItem[] { menuToolStripMenuItem });
+            menuStrip1.Location = new Point(0, 0);
+            menuStrip1.Name = "menuStrip1";
+            menuStrip1.Size = new Size(1150, 28);
+            menuStrip1.TabIndex = 3;
+            menuStrip1.Text = "menuStrip1";
+            // 
+            // menuToolStripMenuItem
+            // 
+            menuToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { newGameToolStripMenuItem, undoToolStripMenuItem, quitToolStripMenuItem });
+            menuToolStripMenuItem.Name = "menuToolStripMenuItem";
+            menuToolStripMenuItem.Size = new Size(60, 24);
+            menuToolStripMenuItem.Text = "Menu";
+            // 
+            // newGameToolStripMenuItem
+            // 
+            newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
+            newGameToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
+            newGameToolStripMenuItem.Size = new Size(224, 26);
+            newGameToolStripMenuItem.Text = "New game";
+            newGameToolStripMenuItem.Click += newGameToolStripMenuItem_Click;
+            // 
+            // undoToolStripMenuItem
+            // 
+            undoToolStripMenuItem.Name = "undoToolStripMenuItem";
+            undoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Z;
+            undoToolStripMenuItem.Size = new Size(224, 26);
+            undoToolStripMenuItem.Text = "Undo";
+            undoToolStripMenuItem.Click += undoToolStripMenuItem_Click;
+            // 
+            // quitToolStripMenuItem
+            // 
+            quitToolStripMenuItem.Name = "quitToolStripMenuItem";
+            quitToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Q;
+            quitToolStripMenuItem.Size = new Size(224, 26);
+            quitToolStripMenuItem.Text = "Quit";
+            quitToolStripMenuItem.Click += quitToolStripMenuItem_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1150, 716);
+            ClientSize = new Size(1150, 752);
             Controls.Add(panel3);
             Controls.Add(panel2);
             Controls.Add(pnlChessBoard);
+            Controls.Add(menuStrip1);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MainMenuStrip = menuStrip1;
             Name = "Form1";
             Text = "Game Caro";
-            panel2.ResumeLayout(false);
+            FormClosing += Form1_FormClosing;
             ((System.ComponentModel.ISupportInitialize)main_picture).EndInit();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pctbSign).EndInit();
+            panel2.ResumeLayout(false);
+            menuStrip1.ResumeLayout(false);
+            menuStrip1.PerformLayout();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Panel pnlChessBoard;
-        private Panel panel2;
         private Panel panel3;
         private PictureBox main_picture;
         private ProgressBar prcbCoolDown;
@@ -181,5 +233,11 @@
         private Label label1;
         private PictureBox pctbSign;
         private System.Windows.Forms.Timer tmCoolDown;
+        private Panel panel2;
+        private MenuStrip menuStrip1;
+        private ToolStripMenuItem menuToolStripMenuItem;
+        private ToolStripMenuItem newGameToolStripMenuItem;
+        private ToolStripMenuItem undoToolStripMenuItem;
+        private ToolStripMenuItem quitToolStripMenuItem;
     }
 }
