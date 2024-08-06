@@ -27,13 +27,14 @@
         {
             tmCoolDown.Stop();
             pnlChessBoard.Enabled = false;
+            undoToolStripMenuItem.Enabled = false;
             MessageBox.Show("Trò chơi kết thúc!");
         }
         void NewGame()
         {
             prcbCoolDown.Value = 0;
             tmCoolDown.Stop();
-
+            undoToolStripMenuItem.Enabled = true;
             ChessBoard.DrawChessBoard();
         }
         void Quit()
@@ -42,7 +43,7 @@
         }
         void Undo()
         {
-
+            ChessBoard.Undo();
         }
         private void ChessBoard_PlayerSigned(object? sender, EventArgs e)
         {
@@ -86,5 +87,10 @@
                 e.Cancel = true;
         }
         #endregion
+
+        private void menuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
