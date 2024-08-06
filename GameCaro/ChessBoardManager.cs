@@ -56,6 +56,12 @@ namespace GameCaro
                 endedGame -= value;
             }
         }
+        private Stack<PlayInfo> playTimeLine;
+        public Stack<PlayInfo> PlayTimeLine
+        {
+            get { return playTimeLine; }
+            set { playTimeLine = value; }
+        }
         #endregion
 
         #region Initialize
@@ -69,7 +75,9 @@ namespace GameCaro
                 new Player("Nhom1_LTM", Image.FromFile(Application.StartupPath + "\\Resources\\21.png")),
                 new Player("Bui_Duong_The", Image.FromFile(Application.StartupPath + "\\Resources\\1.png")),
             };
+            
         }
+
         #endregion
 
         #region Methods
@@ -77,6 +85,7 @@ namespace GameCaro
         {
             ChessBoard.Enabled = true;
             ChessBoard.Controls.Clear();
+            PlayTimeLine = new Stack<PlayInfo>();
             currentplayer = 0;
             SwitchPlayer();
 
@@ -120,6 +129,11 @@ namespace GameCaro
 
             Sign(btn);
 
+            PlayTimeLine.Push(new PlayInfo(GetChessPoint(btn),Currentplayer));
+
+            Currentplayer = Currentplayer == 1 ? 0 : 1;
+
+
             SwitchPlayer();
 
             if (playerSigned != null)
@@ -139,6 +153,29 @@ namespace GameCaro
                 endedGame(this, new EventArgs());
         }
 
+        public bool Undo()
+        {
+            if (playTimeLine.Count <= 0)
+            {
+                return false;
+            }
+            PlayInfo oldPoint =PlayTimeLine.Pop();
+            Button btn = Matrix[oldPoint.Point.Y][oldPoint.Point.X];
+            btn.BackgroundImage = null;
+
+            if (playTimeLine.Count<=0)
+            {
+                Currentplayer = 0;
+            }
+            else {
+                oldPoint = playTimeLine.Peek();
+
+                Currentplayer = oldPoint.Currentplayer == 1 ? 0 : 1;
+            }
+
+            SwitchPlayer();
+            return true;
+        }
         private bool isEndGame(Button btn)
         {
             return isEndHorizontal(btn) || isEndVertical(btn) || isEndPrimaryDiagonal(btn) || isEndSubDiagonal(btn);
@@ -288,7 +325,7 @@ namespace GameCaro
         private void Sign(Button btn)
         {
             btn.BackgroundImage = Player[Currentplayer].Sign;
-            Currentplayer = Currentplayer == 1 ? 0 : 1;
+            
         }
         private void SwitchPlayer()
         {
