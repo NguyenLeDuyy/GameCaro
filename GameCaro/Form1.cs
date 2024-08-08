@@ -1,9 +1,14 @@
-﻿namespace GameCaro
+﻿using System.Diagnostics.Eventing.Reader;
+using System.Net.NetworkInformation;
+
+namespace GameCaro
 {
     public partial class Form1 : Form
     {
         #region Properties
         ChessBoardManager ChessBoard;
+
+        SocketManager socket;
         #endregion
         public Form1()
         {
@@ -19,6 +24,7 @@
 
             tmCoolDown.Interval = Cons.COOL_DOWN_INTERVAL;
 
+            socket = new SocketManager();
             NewGame();
         }
 
@@ -27,13 +33,14 @@
         {
             tmCoolDown.Stop();
             pnlChessBoard.Enabled = false;
+            undoToolStripMenuItem.Enabled = false;
             MessageBox.Show("Trò chơi kết thúc!");
         }
         void NewGame()
         {
             prcbCoolDown.Value = 0;
             tmCoolDown.Stop();
-
+            undoToolStripMenuItem.Enabled = true;
             ChessBoard.DrawChessBoard();
         }
         void Quit()
@@ -42,7 +49,7 @@
         }
         void Undo()
         {
-
+            ChessBoard.Undo();
         }
         private void ChessBoard_PlayerSigned(object? sender, EventArgs e)
         {
@@ -85,6 +92,69 @@
             if (MessageBox.Show("Bạn có chắc muốn thoát?", "Thông báo", MessageBoxButtons.OKCancel) != System.Windows.Forms.DialogResult.OK)
                 e.Cancel = true;
         }
+
+        private void btnLAN_Click(object sender, EventArgs e)
+        {
+            socket.IP = txbIP.Text;
+
+            if (!socket.ConnectServer())
+            {
+                socket.CreateServer();
+
+                Thread listenThread = new Thread(() =>
+                {
+                    while (true)
+                    {
+                        Thread.Sleep(500);
+                        try
+                        {
+                            Listen();
+                            break;
+                        }
+                        catch { }
+                    }
+                });
+                listenThread.IsBackground = true;
+                listenThread.Start();
+            }
+            else
+            {
+                Thread listenThread = new Thread(() =>
+                {
+                    Listen();
+                });
+                listenThread.IsBackground = true;
+                listenThread.Start();
+
+                MessageBox.Show("Thông tin từ Client");
+            }
+            
+        }
+
+        private void Form1_Shown(object sender, EventArgs e)
+        {
+            txbIP.Text = socket.GetLocalIPv4(NetworkInterfaceType.Wireless80211);
+
+            if (string.IsNullOrEmpty(txbIP.Text))
+            {
+                txbIP.Text = socket.GetLocalIPv4(NetworkInterfaceType.Ethernet);
+            }
+           
+
+        }
+        void Listen()
+        {
+            string data = (string)socket.Receive();
+            MessageBox.Show(data);
+        }
+
         #endregion
+
+        private void menuToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+       
     }
 }
