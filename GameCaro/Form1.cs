@@ -16,6 +16,8 @@ namespace GameCaro
         {
             InitializeComponent();
 
+            Control.CheckForIllegalCrossThreadCalls = false;
+
             ChessBoard = new ChessBoardManager(pnlChessBoard, txbPlayerName, pctbSign);
             ChessBoard.EndedGame += ChessBoard_EndedGame;
             ChessBoard.PlayerSigned += ChessBoard_PlayerSigned;
@@ -58,10 +60,14 @@ namespace GameCaro
             ChessBoard.Undo();
         }
 
-        private void ChessBoard_PlayerSigned(object? sender, EventArgs e)
+        private void ChessBoard_PlayerSigned(object sender, ButtonClickEvent e)
         {
             tmCoolDown.Start();
+            pnlChessBoard.Enabled = false;
             prcbCoolDown.Value = 0;
+            socket.Send(new SocketData((int)SocketCommand.SEND_POINT, "", e.ClickedPoint));
+
+            Listen();
         }
 
         private void ChessBoard_EndedGame(object? sender, EventArgs e)
@@ -106,37 +112,15 @@ namespace GameCaro
 
             if (!socket.ConnectServer())
             {
+                socket.isServer = true;
+                pnlChessBoard.Enabled = true;
                 socket.CreateServer();
-
-                Thread listenThread = new Thread(() =>
-                {
-                    while (true)
-                    {
-                        Thread.Sleep(500);
-                        try
-                        {
-                            Listen();
-                            break;
-                        }
-                        catch
-                        {
-
-                        }
-                    }
-                });
-                listenThread.IsBackground = true;
-                listenThread.Start();
             }
             else
             {
-                Thread listenThread = new Thread(() =>
-                {
-                    Listen();
-                });
-                listenThread.IsBackground = true;
-                listenThread.Start();
-
-                socket.Send("Đây là tiếng nói Việt Nam từ Client");
+                socket.isServer = false;
+                pnlChessBoard.Enabled = false;
+                Listen();
             }
 
         }
@@ -154,11 +138,58 @@ namespace GameCaro
 
         void Listen()
         {
-            string data = (string)socket.Receive(typeof(string));
+            Thread listenThread = new Thread(() =>
+            {
+                try
+                {
+                    SocketData data = (SocketData)socket.Receive(typeof(SocketData));
 
-            MessageBox.Show("Đã kết nối");
+                    ProcessData(data);
+                }
+                catch (Exception e)
+                {
+                    
+                }
+            });
 
-            MessageBox.Show(data);
+            listenThread.IsBackground = true;
+            listenThread.Start();
+         }
+
+
+        private void ProcessData(SocketData data)
+        {
+            switch (data.Command)
+            {
+                case (int)SocketCommand.NOTIFY:
+                    MessageBox.Show(data.Message);
+                    break;
+                case (int)SocketCommand.NEW_GAME:
+                    break;                
+                case (int)SocketCommand.SEND_POINT:
+                    // 1. Xử lý lỗi cross-thread do multi-thread (prcbCoolDown đang chạy trong 1 luồng khác - luồng giao diện) và một luồng khác gọi đến
+                    // 2. Do prcbCoolDown thực hiện việc Start nằm trong 1 luồng khác => để giao diện chạy mượt thì phải đặt vào Invoke
+                    this.Invoke((MethodInvoker)(() =>
+                    {
+                        pnlChessBoard.Enabled = true;
+                        prcbCoolDown.Value = 0;
+                        tmCoolDown.Start();
+                        ChessBoard.OtherPlayerSign(data.Point);
+                    }));
+                    break;
+                case (int)SocketCommand.UNDO:
+                    break;                  
+                case (int)SocketCommand.END_GAME:
+
+                    break;                
+                case (int)SocketCommand.QUIT:
+                    break;
+                default:
+
+                    break;
+            }
+
+            Listen();
         }
         #endregion
     }

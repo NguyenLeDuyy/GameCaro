@@ -7,6 +7,7 @@ using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,7 +72,7 @@ namespace GameCaro
             byte[] receiveData = new byte[BUFFER];
             bool isOk = ReceiveData(client, receiveData);
 
-            return DeserializeData(receiveData, type);
+            return DeserializeData<SocketData>(receiveData);
         }
 
         private bool SendData(Socket target, byte[] data)
@@ -95,11 +96,12 @@ namespace GameCaro
             return Encoding.UTF8.GetBytes(jsonString);
         }
 
-        public object DeserializeData(byte[] theByteArray, Type type)
+        public T DeserializeData<T>(byte[] theByteArray)
         {
             string jsonString = Encoding.UTF8.GetString(theByteArray).Trim('\0');
-            return JsonSerializer.Deserialize(jsonString, type);
+            return JsonSerializer.Deserialize<T>(jsonString);
         }
+
 
         /// <summary>
         /// Lấy ra IP V4 của card mạng đang dùng
