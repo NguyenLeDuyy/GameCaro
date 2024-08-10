@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -180,18 +181,31 @@ namespace GameCaro
             {
                 return false;
             }
-            PlayInfo oldPoint =PlayTimeLine.Pop();
+            PlayInfo oldPoint = PlayTimeLine.Peek();
+            bool isUndo1= UndoAStep();
+            bool isUndo2 = UndoAStep();
+            Currentplayer = oldPoint.Currentplayer == 1 ? 0 : 1;
+            return isUndo1 && isUndo1;
+        }
+        private bool UndoAStep()
+        {
+            if (playTimeLine.Count <= 0)
+            {
+                return false;
+            }
+            PlayInfo oldPoint = PlayTimeLine.Pop();
             Button btn = Matrix[oldPoint.Point.Y][oldPoint.Point.X];
             btn.BackgroundImage = null;
 
-            if (playTimeLine.Count<=0)
+            if (playTimeLine.Count <= 0)
             {
                 Currentplayer = 0;
             }
-            else {
+            else
+            {
                 oldPoint = playTimeLine.Peek();
 
-                Currentplayer = oldPoint.Currentplayer == 1 ? 0 : 1;
+                
             }
 
             SwitchPlayer();
@@ -240,7 +254,7 @@ namespace GameCaro
                     break;
             }
 
-            return countLeft + countRight == 5;
+            return countLeft + countRight >4;
         }
 
         private bool isEndVertical(Button btn)
@@ -269,7 +283,7 @@ namespace GameCaro
                     break;
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom >4;
         }
 
         private bool isEndPrimaryDiagonal(Button btn)
@@ -304,7 +318,7 @@ namespace GameCaro
                     break;
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom >4;
         }
 
         private bool isEndSubDiagonal(Button btn)
@@ -339,7 +353,7 @@ namespace GameCaro
                     break;
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom >4;
         }
 
 
