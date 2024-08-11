@@ -39,7 +39,7 @@ namespace GameCaro
             tmCoolDown.Stop();
             pnlChessBoard.Enabled = false;
             undoToolStripMenuItem.Enabled = false;
-            MessageBox.Show("Trò chơi kết thúc!");
+            //MessageBox.Show("Trò chơi kết thúc!");
         }
 
         void NewGame()
@@ -58,6 +58,7 @@ namespace GameCaro
         void Undo()
         {
             ChessBoard.Undo();
+            prcbCoolDown.Value = 0;
         }
 
         private void ChessBoard_PlayerSigned(object sender, ButtonClickEvent e)
@@ -67,12 +68,17 @@ namespace GameCaro
             prcbCoolDown.Value = 0;
             socket.Send(new SocketData((int)SocketCommand.SEND_POINT, "", e.ClickedPoint));
 
+            undoToolStripMenuItem.Enabled = false;
+
             Listen();
         }
 
         private void ChessBoard_EndedGame(object? sender, EventArgs e)
         {
             EndGame();
+
+            socket.Send(new SocketData((int)SocketCommand.END_GAME, "", new Point()));
+
         }
 
         private void tmCoolDown_Tick(object sender, EventArgs e)
@@ -82,17 +88,22 @@ namespace GameCaro
             if (prcbCoolDown.Value >= prcbCoolDown.Maximum)
             {
                 EndGame();
+                socket.Send(new SocketData((int)SocketCommand.TIME_OUT, "", new Point()));
+
             }
         }
 
         private void newGameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             NewGame();
+            socket.Send(new SocketData((int)SocketCommand.NEW_GAME, "", new Point()));
+            pnlChessBoard.Enabled = true;
         }
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Undo();
+            socket.Send(new SocketData((int)SocketCommand.UNDO, "", new Point()));
         }
 
         private void quitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -104,26 +115,47 @@ namespace GameCaro
         {
             if (MessageBox.Show("Bạn có chắc muốn thoát?", "Thông báo", MessageBoxButtons.OKCancel) != DialogResult.OK)
                 e.Cancel = true;
+            else
+            {
+                try
+                {
+                    socket.Send(new SocketData((int)SocketCommand.QUIT, "", new Point()));
+                }
+                catch {  }
+            }
         }
 
         private void btnLAN_Click(object sender, EventArgs e)
+{
+    socket.IP = txbIP.Text;
+
+    if (socket.isServer)
+    {
+        // Server logic
+        if (!socket.ConnectServer())
         {
-            socket.IP = txbIP.Text;
-
-            if (!socket.ConnectServer())
-            {
-                socket.isServer = true;
-                pnlChessBoard.Enabled = true;
-                socket.CreateServer();
-            }
-            else
-            {
-                socket.isServer = false;
-                pnlChessBoard.Enabled = false;
-                Listen();
-            }
-
+            pnlChessBoard.Enabled = true;
+            socket.CreateServer();
         }
+        else
+        {
+            MessageBox.Show("Server is already running.");
+        }
+    }
+    else
+    {
+        // Client logic
+        if (socket.ConnectServer())
+        {
+            pnlChessBoard.Enabled = false;
+            Listen();
+        }
+        else
+        {
+            MessageBox.Show("Unable to connect to server.");
+        }
+    }
+}
 
         private void Form1_Shown(object sender, EventArgs e)
         {
@@ -165,6 +197,11 @@ namespace GameCaro
                     MessageBox.Show(data.Message);
                     break;
                 case (int)SocketCommand.NEW_GAME:
+                    this.Invoke((MethodInvoker)(() =>
+                    {
+                        NewGame();
+                        pnlChessBoard.Enabled = false;
+                    }));
                     break;                
                 case (int)SocketCommand.SEND_POINT:
                     // 1. Xử lý lỗi cross-thread do multi-thread (prcbCoolDown đang chạy trong 1 luồng khác - luồng giao diện) và một luồng khác gọi đến
@@ -175,14 +212,23 @@ namespace GameCaro
                         prcbCoolDown.Value = 0;
                         tmCoolDown.Start();
                         ChessBoard.OtherPlayerSign(data.Point);
+                        undoToolStripMenuItem.Enabled = true;
                     }));
                     break;
                 case (int)SocketCommand.UNDO:
+                    Undo();
+                    prcbCoolDown.Value = 0;
                     break;                  
                 case (int)SocketCommand.END_GAME:
-
+                    EndGame();
+                    MessageBox.Show("Người chơi " + ChessBoard.Player[ChessBoard.Currentplayer == 1 ? 0 : 1].Name + " đã thắng.");
+                    break;                  
+                case (int)SocketCommand.TIME_OUT:
+                    MessageBox.Show("Hết giờ");
                     break;                
                 case (int)SocketCommand.QUIT:
+                    tmCoolDown.Stop();
+                    MessageBox.Show("Người chơi đã thoát");
                     break;
                 default:
 

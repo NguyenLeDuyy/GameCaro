@@ -180,15 +180,33 @@ namespace GameCaro
             {
                 return false;
             }
-            PlayInfo oldPoint =PlayTimeLine.Pop();
+
+            bool isUndo1 = UndoAStep();
+            bool isUndo2 = UndoAStep();
+
+            PlayInfo oldPoint = PlayTimeLine.Peek();
+
+            Currentplayer = oldPoint.Currentplayer == 1 ? 0 : 1;
+
+            return isUndo1 && isUndo2;
+        }
+
+        private bool UndoAStep()
+        {
+            if (playTimeLine.Count <= 0)
+            {
+                return false;
+            }
+            PlayInfo oldPoint = PlayTimeLine.Pop();
             Button btn = Matrix[oldPoint.Point.Y][oldPoint.Point.X];
             btn.BackgroundImage = null;
 
-            if (playTimeLine.Count<=0)
+            if (playTimeLine.Count <= 0)
             {
                 Currentplayer = 0;
             }
-            else {
+            else
+            {
                 oldPoint = playTimeLine.Peek();
 
                 Currentplayer = oldPoint.Currentplayer == 1 ? 0 : 1;
@@ -197,6 +215,7 @@ namespace GameCaro
             SwitchPlayer();
             return true;
         }
+
         private bool isEndGame(Button btn)
         {
             return isEndHorizontal(btn) || isEndVertical(btn) || isEndPrimaryDiagonal(btn) || isEndSubDiagonal(btn);
@@ -240,7 +259,7 @@ namespace GameCaro
                     break;
             }
 
-            return countLeft + countRight == 5;
+            return countLeft + countRight > 4;
         }
 
         private bool isEndVertical(Button btn)
@@ -269,7 +288,7 @@ namespace GameCaro
                     break;
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom > 4;
         }
 
         private bool isEndPrimaryDiagonal(Button btn)
@@ -304,7 +323,7 @@ namespace GameCaro
                     break;
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom > 4;
         }
 
         private bool isEndSubDiagonal(Button btn)
@@ -339,7 +358,7 @@ namespace GameCaro
                     break;
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom > 4;
         }
 
 
