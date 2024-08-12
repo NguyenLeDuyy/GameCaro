@@ -73,7 +73,7 @@ namespace GameCaro
             this.Player = new List<Player>()
             {
                 new Player("Nhom1_LTM", Image.FromFile(Application.StartupPath + "\\Resources\\21.png")),
-                new Player("Bui_Duong_The", Image.FromFile(Application.StartupPath + "\\Resources\\1.png")),
+                new Player("Đối thủ", Image.FromFile(Application.StartupPath + "\\Resources\\1.png")),
             };
             
         }
@@ -360,7 +360,6 @@ namespace GameCaro
 
             return countTop + countBottom > 4;
         }
-
 
         private void Sign(Button btn)
         {

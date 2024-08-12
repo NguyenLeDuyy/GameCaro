@@ -125,37 +125,35 @@ namespace GameCaro
             }
         }
 
-        private void btnLAN_Click(object sender, EventArgs e)
-{
-    socket.IP = txbIP.Text;
+        private enum Role { None, Server, Client }
+        private Role initialRole = Role.None;
 
-    if (socket.isServer)
-    {
-        // Server logic
-        if (!socket.ConnectServer())
+        private void btnLAN_Click(object sender, EventArgs e)
         {
-            pnlChessBoard.Enabled = true;
-            socket.CreateServer();
+            if (initialRole == Role.None)
+            {
+                socket.IP = txbIP.Text;
+
+                if (!socket.ConnectServer())
+                {
+                    socket.isServer = true;
+                    pnlChessBoard.Enabled = true;
+                    socket.CreateServer();
+                    initialRole = Role.Server;
+                }
+                else
+                {
+                    socket.isServer = false;
+                    pnlChessBoard.Enabled = false;
+                    Listen();
+                    initialRole = Role.Client;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Vai trò ứng dụng đã được áp dụng, không thể thay đổi.");
+            }
         }
-        else
-        {
-            MessageBox.Show("Server is already running.");
-        }
-    }
-    else
-    {
-        // Client logic
-        if (socket.ConnectServer())
-        {
-            pnlChessBoard.Enabled = false;
-            Listen();
-        }
-        else
-        {
-            MessageBox.Show("Unable to connect to server.");
-        }
-    }
-}
 
         private void Form1_Shown(object sender, EventArgs e)
         {

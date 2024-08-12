@@ -33,7 +33,7 @@
             pnlChessBoard = new Panel();
             main_picture = new PictureBox();
             panel3 = new Panel();
-            label1 = new Label();
+            pictureBox1 = new PictureBox();
             pctbSign = new PictureBox();
             btnLAN = new Button();
             txbIP = new TextBox();
@@ -48,6 +48,7 @@
             quitToolStripMenuItem = new ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)main_picture).BeginInit();
             panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pctbSign).BeginInit();
             panel2.SuspendLayout();
             menuStrip1.SuspendLayout();
@@ -74,7 +75,7 @@
             // panel3
             // 
             panel3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            panel3.Controls.Add(label1);
+            panel3.Controls.Add(pictureBox1);
             panel3.Controls.Add(pctbSign);
             panel3.Controls.Add(btnLAN);
             panel3.Controls.Add(txbIP);
@@ -85,16 +86,18 @@
             panel3.Size = new Size(310, 521);
             panel3.TabIndex = 2;
             // 
-            // label1
+            // pictureBox1
             // 
-            label1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            label1.AutoSize = true;
-            label1.Font = new Font("Algerian", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label1.Location = new Point(17, 463);
-            label1.Name = "label1";
-            label1.Size = new Size(272, 34);
-            label1.TabIndex = 5;
-            label1.Text = "5 in a line to win";
+            pictureBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            pictureBox1.BackColor = SystemColors.Control;
+            pictureBox1.BackgroundImage = Properties.Resources.Nhom1;
+            pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
+            pictureBox1.Location = new Point(7, 464);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(300, 51);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 6;
+            pictureBox1.TabStop = false;
             // 
             // pctbSign
             // 
@@ -177,7 +180,7 @@
             // 
             newGameToolStripMenuItem.Name = "newGameToolStripMenuItem";
             newGameToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.N;
-            newGameToolStripMenuItem.Size = new Size(224, 26);
+            newGameToolStripMenuItem.Size = new Size(217, 26);
             newGameToolStripMenuItem.Text = "New game";
             newGameToolStripMenuItem.Click += newGameToolStripMenuItem_Click;
             // 
@@ -185,7 +188,7 @@
             // 
             undoToolStripMenuItem.Name = "undoToolStripMenuItem";
             undoToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Z;
-            undoToolStripMenuItem.Size = new Size(224, 26);
+            undoToolStripMenuItem.Size = new Size(217, 26);
             undoToolStripMenuItem.Text = "Undo";
             undoToolStripMenuItem.Click += undoToolStripMenuItem_Click;
             // 
@@ -193,7 +196,7 @@
             // 
             quitToolStripMenuItem.Name = "quitToolStripMenuItem";
             quitToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Q;
-            quitToolStripMenuItem.Size = new Size(224, 26);
+            quitToolStripMenuItem.Size = new Size(217, 26);
             quitToolStripMenuItem.Text = "Quit";
             quitToolStripMenuItem.Click += quitToolStripMenuItem_Click;
             // 
@@ -215,6 +218,7 @@
             ((System.ComponentModel.ISupportInitialize)main_picture).EndInit();
             panel3.ResumeLayout(false);
             panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)pctbSign).EndInit();
             panel2.ResumeLayout(false);
             menuStrip1.ResumeLayout(false);
@@ -241,5 +245,6 @@
         private ToolStripMenuItem newGameToolStripMenuItem;
         private ToolStripMenuItem undoToolStripMenuItem;
         private ToolStripMenuItem quitToolStripMenuItem;
+        private PictureBox pictureBox1;
     }
 }
