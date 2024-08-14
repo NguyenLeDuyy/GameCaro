@@ -90,34 +90,29 @@ namespace GameCaro
             SwitchPlayer();
 
             Matrix = new List<List<Button>>();
-            Button oldButton = new Button() { Width = 0, Location = new Point(0, 0) };
             for (int i = 0; i < Cons.CHESS_BOARD_HEIGHT; i++)
             {
+                Matrix.Add(new List<Button>());
                 for (int j = 0; j < Cons.CHESS_BOARD_WIDTH; j++)
                 {
-                    Matrix.Add(new List<Button>());
                     Button btn = new Button()
                     {
                         Width = Cons.CHESS_WIDTH,
                         Height = Cons.CHESS_HEIGHT,
-                        Location = new Point(oldButton.Location.X + oldButton.Width, oldButton.Location.Y),
+                        Location = new Point(j * Cons.CHESS_WIDTH, i * Cons.CHESS_HEIGHT),
                         BackgroundImageLayout = ImageLayout.Stretch, // Căn chỉnh kích thước của ảnh vừa với button
                         Tag = i.ToString(),
                     };
 
                     btn.Click += btn_Click;
 
-                    oldButton = btn;
-
                     ChessBoard.Controls.Add(btn);
 
                     Matrix[i].Add(btn);
                 }
-                oldButton.Location = new Point(0, oldButton.Location.Y + Cons.CHESS_HEIGHT);
-                oldButton.Width = 0;
-                oldButton.Height = 0;
             }
         }
+
 
         void btn_Click(object sender, EventArgs e)
         {
