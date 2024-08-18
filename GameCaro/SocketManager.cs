@@ -77,11 +77,19 @@ namespace GameCaro
 
         private bool SendData(Socket target, byte[] data)
         {
+            if (target == null)
+            {
+                return false;
+            }
             return target.Send(data) == 1 ? true : false;
         }
 
         private bool ReceiveData(Socket target, byte[] data)
         {
+            if (target == null)
+            {
+                return false;
+            }
             return target.Receive(data) == 1 ? true : false;
         }
 

@@ -83,7 +83,7 @@ namespace GameCaro
         #region Methods
         public void DrawChessBoard()
         {
-            ChessBoard.Enabled = true;
+            ChessBoard.Enabled = false;
             ChessBoard.Controls.Clear();
             PlayTimeLine = new Stack<PlayInfo>();
             currentplayer = 0;
@@ -113,9 +113,7 @@ namespace GameCaro
 
                     Matrix[i].Add(btn);
                 }
-                oldButton.Location = new Point(0, oldButton.Location.Y + Cons.CHESS_HEIGHT);
-                oldButton.Width = 0;
-                oldButton.Height = 0;
+                oldButton = new Button() { Width = 0, Location = new Point(0, oldButton.Location.Y + Cons.CHESS_HEIGHT) };
             }
         }
 
@@ -143,6 +141,11 @@ namespace GameCaro
             {
                 EndGame();
             }
+            if (playTimeLine.Count == Cons.CHESS_BOARD_HEIGHT * Cons.CHESS_BOARD_WIDTH)
+            {
+                MessageBox.Show("Hòa");
+                EndGame();
+            }
 
         }
 
@@ -164,6 +167,11 @@ namespace GameCaro
 
             if (isEndGame(btn))
             {
+                EndGame();
+            }
+            if (playTimeLine.Count == Cons.CHESS_BOARD_HEIGHT * Cons.CHESS_BOARD_WIDTH)
+            {
+                MessageBox.Show("Hòa");
                 EndGame();
             }
         }
