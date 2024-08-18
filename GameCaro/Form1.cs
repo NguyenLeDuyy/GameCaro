@@ -121,7 +121,7 @@ namespace GameCaro
                 {
                     socket.Send(new SocketData((int)SocketCommand.QUIT, "", new Point()));
                 }
-                catch {  }
+                catch { }
             }
         }
 
@@ -178,13 +178,13 @@ namespace GameCaro
                 }
                 catch (Exception e)
                 {
-                    
+
                 }
             });
 
             listenThread.IsBackground = true;
             listenThread.Start();
-         }
+        }
 
 
         private void ProcessData(SocketData data)
@@ -200,7 +200,7 @@ namespace GameCaro
                         NewGame();
                         pnlChessBoard.Enabled = false;
                     }));
-                    break;                
+                    break;
                 case (int)SocketCommand.SEND_POINT:
                     // 1. Xử lý lỗi cross-thread do multi-thread (prcbCoolDown đang chạy trong 1 luồng khác - luồng giao diện) và một luồng khác gọi đến
                     // 2. Do prcbCoolDown thực hiện việc Start nằm trong 1 luồng khác => để giao diện chạy mượt thì phải đặt vào Invoke
@@ -216,14 +216,14 @@ namespace GameCaro
                 case (int)SocketCommand.UNDO:
                     Undo();
                     prcbCoolDown.Value = 0;
-                    break;                  
+                    break;
                 case (int)SocketCommand.END_GAME:
                     EndGame();
                     MessageBox.Show("Người chơi " + ChessBoard.Player[ChessBoard.Currentplayer == 1 ? 0 : 1].Name + " đã thắng.");
-                    break;                  
+                    break;
                 case (int)SocketCommand.TIME_OUT:
                     MessageBox.Show("Hết giờ");
-                    break;                
+                    break;
                 case (int)SocketCommand.QUIT:
                     tmCoolDown.Stop();
                     MessageBox.Show("Người chơi đã thoát");
@@ -236,5 +236,14 @@ namespace GameCaro
             Listen();
         }
         #endregion
+
+        private void homeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            home hm = new home();
+            hm.ShowDialog();
+            hm = null;
+            this.Close();
+        }
     }
 }

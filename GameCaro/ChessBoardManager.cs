@@ -331,7 +331,7 @@ namespace GameCaro
             Point point = GetChessPoint(btn);
 
             int countTop = 0;
-            for (int i = 0; i <= point.X; i++)
+            for (int i = 0; i <= Cons.CHESS_BOARD_WIDTH - point.X; i++)
             {
                 if (point.X + i >= Cons.CHESS_BOARD_WIDTH || point.Y - i < 0)
                     break;
@@ -345,7 +345,7 @@ namespace GameCaro
             }
 
             int countBottom = 0;
-            for (int i = 1; i <= Cons.CHESS_BOARD_WIDTH - point.X; i++)
+            for (int i = 1; i <= Cons.CHESS_BOARD_HEIGHT - point.Y; i++)
             {
                 if (point.X - i < 0 || point.Y + i >= Cons.CHESS_BOARD_HEIGHT) // Phải xét bằng vì kích thước chess đi từ 0
                     break;
