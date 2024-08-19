@@ -190,11 +190,25 @@ namespace GameCaro
             }
 
             bool isUndo1 = UndoAStep();
-            bool isUndo2 = UndoAStep();
+            bool isUndo2 = true;
+            if (playTimeLine.Count > 0)
+            {
+                isUndo2 = UndoAStep();
+            }
 
-            PlayInfo oldPoint = PlayTimeLine.Peek();
 
-            Currentplayer = oldPoint.Currentplayer == 1 ? 0 : 1;
+            if (playTimeLine.Count <= 0)
+            {
+                Currentplayer = 0;
+            }
+            else
+            {
+                PlayInfo oldPoint = PlayTimeLine.Peek();
+
+                Currentplayer = oldPoint.Currentplayer == 1 ? 0 : 1;
+            }
+
+
 
             return isUndo1 && isUndo2;
         }
