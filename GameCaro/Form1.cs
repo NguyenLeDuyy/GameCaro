@@ -202,8 +202,6 @@ namespace GameCaro
                     }));
                     break;
                 case (int)SocketCommand.SEND_POINT:
-                    // 1. Xử lý lỗi cross-thread do multi-thread (prcbCoolDown đang chạy trong 1 luồng khác - luồng giao diện) và một luồng khác gọi đến
-                    // 2. Do prcbCoolDown thực hiện việc Start nằm trong 1 luồng khác => để giao diện chạy mượt thì phải đặt vào Invoke
                     this.Invoke((MethodInvoker)(() =>
                     {
                         pnlChessBoard.Enabled = true;
@@ -222,28 +220,45 @@ namespace GameCaro
                     MessageBox.Show("Người chơi " + ChessBoard.Player[ChessBoard.Currentplayer == 1 ? 0 : 1].Name + " đã thắng.");
                     break;
                 case (int)SocketCommand.TIME_OUT:
-                    MessageBox.Show("Hết giờ");
+                    // Chỉ hiển thị thông báo hết giờ khi thực sự hết giờ
+                    if (tmCoolDown.Enabled)
+                    {
+                        MessageBox.Show("Hết giờ");
+                    }
                     break;
                 case (int)SocketCommand.QUIT:
-                    tmCoolDown.Stop();
-                    MessageBox.Show("Người chơi đã thoát");
+                    EndGame();
+                    MessageBox.Show("Người chơi đã thoát. Bạn đã thắng.");
                     break;
                 default:
-
                     break;
             }
 
             Listen();
         }
+
         #endregion
 
         private void homeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            home hm = new home();
-            hm.ShowDialog();
-            hm = null;
-            this.Close();
+            // Hiển thị hộp thoại xác nhận
+            DialogResult result = MessageBox.Show("Bạn có muốn về trang chủ không?", "Xác nhận", MessageBoxButtons.OKCancel);
+
+            // Nếu người dùng chọn OK
+            if (result == DialogResult.OK)
+            {
+                // Gửi thông báo cho người chơi còn lại
+                socket.Send(new SocketData((int)SocketCommand.QUIT, "", new Point()));
+
+                // Đóng form hiện tại và mở form trang chủ
+                this.Hide();
+                home hm = new home();
+                hm.ShowDialog();
+                hm = null;
+                this.Close();
+            }
+            // Nếu người dùng chọn Cancel thì không làm gì
         }
+
     }
 }
