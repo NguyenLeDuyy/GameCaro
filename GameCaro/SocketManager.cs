@@ -58,7 +58,7 @@ namespace GameCaro
         public string IP = "127.0.0.1";
         public int PORT = 9999;
         public const int BUFFER = 1024;
-        public bool isServer = true;
+        public bool isServer = false;
 
         public bool Send(object data)
         {
@@ -77,11 +77,19 @@ namespace GameCaro
 
         private bool SendData(Socket target, byte[] data)
         {
+            if (target == null)
+            {
+                return false;
+            }
             return target.Send(data) == 1 ? true : false;
         }
 
         private bool ReceiveData(Socket target, byte[] data)
         {
+            if (target == null)
+            {
+                return false;
+            }
             return target.Receive(data) == 1 ? true : false;
         }
 

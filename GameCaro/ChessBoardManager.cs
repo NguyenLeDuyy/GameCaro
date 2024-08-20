@@ -73,7 +73,7 @@ namespace GameCaro
             this.Player = new List<Player>()
             {
                 new Player("Nhom1_LTM", Image.FromFile(Application.StartupPath + "\\Resources\\21.png")),
-                new Player("Bui_Duong_The", Image.FromFile(Application.StartupPath + "\\Resources\\1.png")),
+                new Player("Đối thủ", Image.FromFile(Application.StartupPath + "\\Resources\\1.png")),
             };
             
         }
@@ -83,7 +83,7 @@ namespace GameCaro
         #region Methods
         public void DrawChessBoard()
         {
-            ChessBoard.Enabled = true;
+            ChessBoard.Enabled = false;
             ChessBoard.Controls.Clear();
             PlayTimeLine = new Stack<PlayInfo>();
             currentplayer = 0;
@@ -113,9 +113,7 @@ namespace GameCaro
 
                     Matrix[i].Add(btn);
                 }
-                oldButton.Location = new Point(0, oldButton.Location.Y + Cons.CHESS_HEIGHT);
-                oldButton.Width = 0;
-                oldButton.Height = 0;
+                oldButton = new Button() { Width = 0, Location = new Point(0, oldButton.Location.Y + Cons.CHESS_HEIGHT) };
             }
         }
 
@@ -143,6 +141,11 @@ namespace GameCaro
             {
                 EndGame();
             }
+            if (playTimeLine.Count == Cons.CHESS_BOARD_HEIGHT * Cons.CHESS_BOARD_WIDTH)
+            {
+                MessageBox.Show("Hòa");
+                EndGame();
+            }
 
         }
 
@@ -166,6 +169,11 @@ namespace GameCaro
             {
                 EndGame();
             }
+            if (playTimeLine.Count == Cons.CHESS_BOARD_HEIGHT * Cons.CHESS_BOARD_WIDTH)
+            {
+                MessageBox.Show("Hòa");
+                EndGame();
+            }
         }
 
         public void EndGame()
@@ -180,15 +188,47 @@ namespace GameCaro
             {
                 return false;
             }
-            PlayInfo oldPoint =PlayTimeLine.Pop();
-            Button btn = Matrix[oldPoint.Point.Y][oldPoint.Point.X];
-            btn.BackgroundImage = null;
 
-            if (playTimeLine.Count<=0)
+            bool isUndo1 = UndoAStep();
+            bool isUndo2 = true;
+            if (playTimeLine.Count > 0)
+            {
+                isUndo2 = UndoAStep();
+            }
+
+
+            if (playTimeLine.Count <= 0)
             {
                 Currentplayer = 0;
             }
-            else {
+            else
+            {
+                PlayInfo oldPoint = PlayTimeLine.Peek();
+
+                Currentplayer = oldPoint.Currentplayer == 1 ? 0 : 1;
+            }
+
+
+
+            return isUndo1 && isUndo2;
+        }
+
+        private bool UndoAStep()
+        {
+            if (playTimeLine.Count <= 0)
+            {
+                return false;
+            }
+            PlayInfo oldPoint = PlayTimeLine.Pop();
+            Button btn = Matrix[oldPoint.Point.Y][oldPoint.Point.X];
+            btn.BackgroundImage = null;
+
+            if (playTimeLine.Count <= 0)
+            {
+                Currentplayer = 0;
+            }
+            else
+            {
                 oldPoint = playTimeLine.Peek();
 
                 Currentplayer = oldPoint.Currentplayer == 1 ? 0 : 1;
@@ -197,6 +237,7 @@ namespace GameCaro
             SwitchPlayer();
             return true;
         }
+
         private bool isEndGame(Button btn)
         {
             return isEndHorizontal(btn) || isEndVertical(btn) || isEndPrimaryDiagonal(btn) || isEndSubDiagonal(btn);
@@ -240,7 +281,7 @@ namespace GameCaro
                     break;
             }
 
-            return countLeft + countRight == 5;
+            return countLeft + countRight > 4;
         }
 
         private bool isEndVertical(Button btn)
@@ -269,7 +310,7 @@ namespace GameCaro
                     break;
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom > 4;
         }
 
         private bool isEndPrimaryDiagonal(Button btn)
@@ -304,7 +345,7 @@ namespace GameCaro
                     break;
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom > 4;
         }
 
         private bool isEndSubDiagonal(Button btn)
@@ -312,7 +353,7 @@ namespace GameCaro
             Point point = GetChessPoint(btn);
 
             int countTop = 0;
-            for (int i = 0; i <= point.X; i++)
+            for (int i = 0; i <= Cons.CHESS_BOARD_WIDTH - point.X; i++)
             {
                 if (point.X + i >= Cons.CHESS_BOARD_WIDTH || point.Y - i < 0)
                     break;
@@ -326,7 +367,7 @@ namespace GameCaro
             }
 
             int countBottom = 0;
-            for (int i = 1; i <= Cons.CHESS_BOARD_WIDTH - point.X; i++)
+            for (int i = 1; i <= Cons.CHESS_BOARD_HEIGHT - point.Y; i++)
             {
                 if (point.X - i < 0 || point.Y + i >= Cons.CHESS_BOARD_HEIGHT) // Phải xét bằng vì kích thước chess đi từ 0
                     break;
@@ -339,9 +380,8 @@ namespace GameCaro
                     break;
             }
 
-            return countTop + countBottom == 5;
+            return countTop + countBottom > 4;
         }
-
 
         private void Sign(Button btn)
         {
