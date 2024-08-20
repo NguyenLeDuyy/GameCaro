@@ -143,6 +143,7 @@ namespace GameCaro
                 }
                 else
                 {
+                    MessageBox.Show("Kết nối thành công!");
                     socket.isServer = false;
                     pnlChessBoard.Enabled = false;
                     Listen();
@@ -217,18 +218,18 @@ namespace GameCaro
                     break;
                 case (int)SocketCommand.END_GAME:
                     EndGame();
-                    MessageBox.Show("Người chơi " + ChessBoard.Player[ChessBoard.Currentplayer == 1 ? 0 : 1].Name + " đã thắng.");
+                    MessageBox.Show(this, "Người chơi " + ChessBoard.Player[ChessBoard.Currentplayer == 1 ? 0 : 1].Name + " đã thắng.");
                     break;
                 case (int)SocketCommand.TIME_OUT:
                     // Chỉ hiển thị thông báo hết giờ khi thực sự hết giờ
                     if (tmCoolDown.Enabled)
                     {
-                        MessageBox.Show("Hết giờ");
+                        MessageBox.Show(this, "Hết giờ");
                     }
                     break;
                 case (int)SocketCommand.QUIT:
                     EndGame();
-                    MessageBox.Show("Người chơi đã thoát. Bạn đã thắng.");
+                    MessageBox.Show(this, "Người chơi đã thoát. Bạn đã thắng.");
                     break;
                 default:
                     break;
